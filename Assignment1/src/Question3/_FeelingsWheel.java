@@ -7,20 +7,22 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class FeelingsWheel implements Rollable<String> {
+public class _FeelingsWheel implements Rollable<String> {
 
     // hold the feelings information here to start
     private List<String> rawFeelings = new ArrayList<String>();
     private String[] feelings;
     private int[] wheelSize;
     private int counter = 0;
+    private boolean timeToFlip = false;
 
-    public FeelingsWheel(String filename) {
+    public _FeelingsWheel(String filename) {
         readTextFile(filename);
         getFeelingNames();
         getWheelSize();
+
+//        System.out.println(rawFeelings.toString());
     }
 
     /**
@@ -66,12 +68,6 @@ public class FeelingsWheel implements Rollable<String> {
                 size = i;
                 break;
             }
-
-        }
-        // if size is still 0, then it means that it's obviously the inner wheel
-        // so let's just get the size of the array list
-        if (size == 0) {
-            return rawFeelings.size();
         }
 
         return size;
@@ -98,40 +94,60 @@ public class FeelingsWheel implements Rollable<String> {
 
     @Override
     public void reset() {
-        if (counter == wheelSize.length - 1) {
+//        System.out.println("23" wheelSize.length);
+//        if (counter == rawFeelings.size()) {
+//            counter = 0;
+//        }
+//        if (counter == getWheelSize()) {
+//            flipped = !flipped;
+//        }
+
+        // if it reaches the end, reset the counter
+        if (counter == rawFeelings.size()) {
             counter = 0;
         }
 
+//        System.out.println(counter);
+//        System.out.println(wheelSize[counter]);
+
+//        if (flipped) {
+////            flipped = false;
+////        }
+
+        if (counter == getWheelSize()) {
+            timeToFlip = true;
+        }
+
+        if (wheelSize[counter] == 1) {
+            timeToFlip = true;
+        } else {
+            timeToFlip = false;
+        }
     }
 
     @Override
     public void increase() {
-//        if (wheelSize[0] == 0 && counter == wheelSize.length - 1) {
-//            counter = 0;
-//            return;
-//        }
         counter++;
     }
 
 
     @Override
     public boolean lastRolledOver() {
-        if (counter != 0) {
-            if (getWheelSize() == 5) {
-                System.out.println("~~~~~~>" + counter);
-            }
-            return wheelSize[counter] == 1;
+        if (!timeToFlip) {
+            reset();
         }
-
-        return false;
+        return timeToFlip;
+//        return (counter == getWheelSize());
     }
 
     @Override
     public String getValue() {
-        return feelings[counter];
+        return String.valueOf(counter);
+//        return feelings[counter];
+
     }
 
     public String toString() {
-        return "";
+        return rawFeelings.get(0);
     }
 }

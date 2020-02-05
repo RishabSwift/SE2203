@@ -3,18 +3,19 @@ package Question2;
 import Question1.ConsoleDisplayInterface;
 import Question1.Rollable;
 
-public class ConsoleDisplay<T> implements ConsoleDisplayInterface<Integer> {
+import java.util.*;
 
-    // Three wheels
-    private Wheel hours, minutes, seconds;
+public class ConsoleDisplay<T> implements ConsoleDisplayInterface<T> {
+
+    public List<Rollable<T>> wheels = new ArrayList<Rollable<T>>();
 
     /**
      * Constructor with only one wheel
      *
      * @param seconds
      */
-    public ConsoleDisplay(Wheel seconds) {
-        this.seconds = seconds;
+    public ConsoleDisplay(Rollable<T> seconds) {
+        wheels.add(seconds);
     }
 
     /**
@@ -23,9 +24,9 @@ public class ConsoleDisplay<T> implements ConsoleDisplayInterface<Integer> {
      * @param seconds
      * @param minutes
      */
-    public ConsoleDisplay(Wheel seconds, Wheel minutes) {
-        this.seconds = seconds;
-        this.minutes = minutes;
+    public ConsoleDisplay(Rollable<T> seconds, Rollable<T> minutes) {
+        this(seconds);
+        wheels.add(minutes);
     }
 
     /**
@@ -35,10 +36,9 @@ public class ConsoleDisplay<T> implements ConsoleDisplayInterface<Integer> {
      * @param minutes
      * @param seconds
      */
-    public ConsoleDisplay(Wheel hours, Wheel minutes, Wheel seconds) {
-        this.hours = hours;
-        this.minutes = minutes;
-        this.seconds = seconds;
+    public ConsoleDisplay(Rollable<T> hours, Rollable<T> minutes, Rollable<T> seconds) {
+        this(seconds, minutes);
+        wheels.add(hours);
     }
 
 
@@ -47,9 +47,9 @@ public class ConsoleDisplay<T> implements ConsoleDisplayInterface<Integer> {
      */
     @Override
     public void reset() {
-        hours.reset();
-        minutes.reset();
-        seconds.reset();
+        for (Rollable<T> wheel : wheels) {
+            wheel.reset();
+        }
     }
 
     /**
@@ -58,77 +58,43 @@ public class ConsoleDisplay<T> implements ConsoleDisplayInterface<Integer> {
     @Override
     public void increase() {
 
-        // increase the seconds... the default wheel by 1
-        seconds.increase();
 
-        // if the seconds is rolled over (meaning it reaches 60)
+        // if the seconds is rolled over for example, (meaning it reaches 60 for ex)
         // then reset it and increase the minutes by 1 and keep the count going
-        if (seconds.lastRolledOver()) {
-            seconds.reset();
-            minutes.increase();
+        for (int i = 0; i < wheels.size(); i++) {
+            if (wheels.get(i).lastRolledOver()) {
+                if (i + 1 == wheels.size()) {
+                    reset();
+                } else {
+                    wheels.get(i + 1).increase();
+                    wheels.get(i).reset();
+                }
+            }
         }
 
-        // if the minutes is rolled over (meaning it reaches 60)
-        // then reset it and increase the hour by 1 and keep the count going
-        if (minutes.lastRolledOver()) {
-            minutes.reset();
-            hours.increase();
-        }
-
-        // if the hours is rolled over (meaning it reaches 24)
-        // then reset it all to 0
-        if (hours.lastRolledOver()) {
-            hours.reset();
-            minutes.reset();
-            seconds.reset();
-        }
-
+        // increase the first one on the Array List
+        wheels.get(0).increase();
 
     }
 
     /**
      * Get the wheel value
+     *
      * @param theWheel
      * @return wheel value
      */
     @Override
-    public Integer getWheelValue(int theWheel) {
-
-        // If it's the first one then it's the seconds
-        if (theWheel == 1) {
-            return seconds.getValue();
-        }
-
-        // second one = minutes
-        if (theWheel == 2) {
-            return minutes.getValue();
-        }
-
-        // or else if it's 3, then it's hours
-        return hours.getValue();
+    public T getWheelValue(int theWheel) {
+        return wheels.get(theWheel - 1).getValue();
     }
 
     /**
      * Check how many wheels are being used
+     *
      * @return
      */
     @Override
     public int getWheelsInUse() {
-
-        // set this to 0 and add 1 to it each time a wheel is being used
-        int total = 0;
-        if (hours != null) {
-            total++;
-        }
-
-        if (minutes != null) {
-            total++;
-        }
-
-        if (seconds != null) {
-            total++;
-        }
-
-        return total;
+        return wheels.size();
     }
 }

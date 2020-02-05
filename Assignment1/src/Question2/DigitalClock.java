@@ -23,6 +23,6 @@ public class DigitalClock extends TimerTask {
         System.out.println("Wheels based clock");
         System.out.println("==================");
         Timer timer = new Timer();
-        timer.schedule(new DigitalClock(), 0, 1000);
+        timer.schedule(new DigitalClock(), 0, 10);
     }
 }

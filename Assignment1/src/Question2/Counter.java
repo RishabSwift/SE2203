@@ -18,7 +18,7 @@ public class Counter {
      * Decrease the count by 1
      */
     public void decrease() {
-        counter--;
+       counter--;
     }
 
     /**

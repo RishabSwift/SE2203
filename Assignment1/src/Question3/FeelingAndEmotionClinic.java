@@ -27,6 +27,6 @@ public class FeelingAndEmotionClinic extends TimerTask {
         System.out.println();
 
         Timer timer = new Timer();
-        timer.schedule(new FeelingAndEmotionClinic(), 0, 1500);
+        timer.schedule(new FeelingAndEmotionClinic(), 0, 20);
     }
 }
