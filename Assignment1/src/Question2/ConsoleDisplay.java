@@ -9,6 +9,7 @@ public class ConsoleDisplay<T> implements ConsoleDisplayInterface<T> {
 
     public List<Rollable<T>> wheels = new ArrayList<Rollable<T>>();
 
+
     /**
      * Constructor with only one wheel
      *

@@ -17,6 +17,10 @@ public class FeelingsWheel implements Rollable<String> {
     private int[] wheelSize;
     private int counter = 0;
 
+    /**
+     * The constructor
+     * @param filename
+     */
     public FeelingsWheel(String filename) {
         readTextFile(filename);
         getFeelingNames();
@@ -37,7 +41,8 @@ public class FeelingsWheel implements Rollable<String> {
                 rawFeelings.add(st);
             }
         } catch (Exception ex) {
-            // caught an error... well shit
+            // caught an error...
+            System.out.println("An error occurred");
         }
     }
 
@@ -77,6 +82,9 @@ public class FeelingsWheel implements Rollable<String> {
         return size;
     }
 
+    /**
+     * Get the feeling names
+     */
     private void getFeelingNames() {
         // initiate the feelings with the size of the array since we now know that
         feelings = new String[rawFeelings.size()];
@@ -96,42 +104,62 @@ public class FeelingsWheel implements Rollable<String> {
     }
 
 
+    /**
+     * Reset the counter
+     */
     @Override
     public void reset() {
         if (counter == wheelSize.length - 1) {
             counter = 0;
         }
-
     }
 
+
+    /**
+     * Increase the counter
+     */
     @Override
     public void increase() {
-//        if (wheelSize[0] == 0 && counter == wheelSize.length - 1) {
-//            counter = 0;
-//            return;
-//        }
+        // in case, to prevent any unexpected errors
+        if (wheelSize[0] == 0 && counter == wheelSize.length - 1) {
+            counter = 0;
+            return;
+        }
         counter++;
+        // in case...
+        if (counter == wheelSize.length - 1) {
+            counter = 0;
+        }
     }
 
 
+    /**
+     * If it's last rolled over
+     * @return
+     */
     @Override
     public boolean lastRolledOver() {
         if (counter != 0) {
-            if (getWheelSize() == 5) {
-                System.out.println("~~~~~~>" + counter);
-            }
             return wheelSize[counter] == 1;
         }
 
         return false;
     }
 
+    /**
+     * Get the value of the wheel
+     * @return
+     */
     @Override
     public String getValue() {
-        return feelings[counter];
+        return feelings[counter]; // return as string
     }
 
+    /**
+     * Convert to string
+     * @return
+     */
     public String toString() {
-        return "";
+        return getValue();
     }
 }

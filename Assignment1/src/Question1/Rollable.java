@@ -2,6 +2,7 @@ package Question1;
 
 public interface Rollable<T> {
 
+
     /**
      * Reset the counter to minimum value
      */
